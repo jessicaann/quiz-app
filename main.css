@@ -5,7 +5,7 @@
 * {
 	font-family: 'Roboto', sans-serif;
 }
-p, h1, h2, .score {
+p, h1, h2, h3, .score {
 	text-align: center;
 }
 button {
@@ -26,12 +26,6 @@ label {
 }
 .hidden {
 	display: none;
-}
-.incorrect {
-	background-color: red;
-}
-.correct {
-	background-color: green;
 }
 .nextButton, .score {
 	margin-top: 20px;
