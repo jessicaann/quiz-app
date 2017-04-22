@@ -2,27 +2,27 @@
 var state = {
 	questions: [ //state.questions.question[0]
 	{	question: "1/5: What is the name of the group that Beyoncé was a member of?", 
-		answer: "Destiny's Child", 
+		answer: "3", 
 		choices: ["SWV", "TLC", "Black Eyed Peas", "Destiny's Child"],
 		correct: true
 	}, 
 	{	question: "2/5: What is Beyoncé’s full legal name?", 
-		answer: "Beyoncé Giselle Knowles",
+		answer: "1",
 		choices: ["Beyoncé Angelique Knowles", "Beyoncé Giselle Knowles", "Beyoncé Jessica Knowles", "Beyoncé Lacelle Knowles"],
 		correct: true
 	},
 	{	question: "3/5: What is the title of Beyoncé's first album?", 
-		answer: "Dangerously In Love", 
+		answer: "2", 
 		choices: ["Unforgettable Love", "IV", "Dangerously In Love", "Just Bey"],
 		correct: true
 	},
 	{	question: "4/5: Where was Beyoncé born?", 
-		answer: "Houston, Texas",
+		answer: "0",
 		choices: ["Houston, Texas", "Miami, Florida", "New Orleans, Louisiana", "Queens, New York"],
 		correct: true
 	},
 	{	question: "5/5: What is Beyoncé’s sign?", 
-		answer: "Virgo",
+		answer: "1",
 		choices: ["Pisces", "Virgo", "Libra", "Cancer"],
 		correct: true
 	}
@@ -34,15 +34,15 @@ var state = {
 	//questions[currentQuestion].question = the actual question
 //State Modifiers
 function compareAnswers(state, answer) {
-	if (questions.length > currentQuestion) {
-		if (answer === questions[currentQuestion].answer) {
+	if (state.questions.length > state.currentQuestion) {
+		if (answer == state.questions[state.currentQuestion].answer) {
 			//increase the score
-			score++;
+			state.score++;
 			//go to the next question
-			currentQuestion++;
-		} else { questions[currentQuestion].correct = false; }
+			
+		} else { state.questions[state.currentQuestion].correct = false; }
 	};
-}
+} 
 //Render Functions
 function renderQuizBody(state, element) {
 	renderQuestion(state, element.find('.js-question-text'));
@@ -50,7 +50,7 @@ function renderQuizBody(state, element) {
 }
 function renderQuestion(state, element) {
 	var currentQuestion = state.questions[state.currentQuestion].question;
-	element.text(currentQuestion.text);
+	element.text(currentQuestion);
 }
 function renderChoices(state, element) {
 	var currentQuestion = state.questions[state.currentQuestion];
@@ -66,7 +66,8 @@ function renderChoices(state, element) {
 };
 function renderResponse(state, element) {
 	$('.quiz-body').addClass('hidden');
-	if (questions[currentQuestion].correct === false) {
+	$('.js-response').removeClass('hidden');
+	if (state.questions[state.currentQuestion].correct === false) {
 		var incorrectResponse = (
 			'<h3>' + 'Not quite.' + '</h3>' +
 			'<p>' + 'The Hive disapproves. Do better.' + '</p>' +
@@ -82,16 +83,15 @@ function renderResponse(state, element) {
 		element.html(correctResponse);
 	}
 }
-
-	//render the current question - you'll need some buttons, 
-	//and a button that moves to the next question - the if part at the top
-	//the submit will listen to the value of the thing, then do the comparison
-	//after the comparison update the scope, after you click next question, you'll do current question ++.
+function renderResetPage (state, element) {
+	if (state.currentQuestion == 4) {
+		$('.reset').removeClass('hidden');
+	};
+}
 
 //Event Listeners
 function startQuiz() {
 	$('.startButton').click(function(event) {
-		console.log('hello');
 		$('.quiz-body').removeClass('hidden');
 		$('.start').addClass('hidden');
 		renderQuizBody(state, $('.quiz-body'));
@@ -100,15 +100,39 @@ function startQuiz() {
 function handleAnswerSubmit() {
 	$('form').submit(function(event) {
 		event.preventDefault();
-		var userAnswer = $("input{name='user-answer']:checked").val();
+		var userAnswer = $("input[name='user-answer']:checked").val();
 		compareAnswers(state, userAnswer);
-		renderResponse(state, $('.js-response'));
-	}
+		renderResponse(state, $('.confused'));
+		renderResetPage(state, $('.reset'));
+	});
 }
-//make a function for the next button? what would it do?
-
+function nextQuestion() {
+	$('.nextButton').click(function(event) {
+		$('.quiz-body').removeClass('hidden');
+		$('.js-response').addClass('hidden');
+		state.currentQuestion++;
+		renderQuizBody(state, $('.quiz-body'));
+		console.log(state.currentQuestion, state.questions.length);
+	});
+}
+function resetPage() {
+	$('.resetButton').click(function(event) {
+		state.currentQuestion = 0;
+		state.score = 0;
+		$('.quiz-body').removeClass('hidden');
+		$('.start').addClass('hidden');
+		renderQuizBody(state, $('.quiz-body'));
+		$('.js-response').addClass('hidden');
+		$('.resetButton').addClass('hidden');
+	});
+}
+//AT THE LAST PAGE, INSTEAD OF NEXT BUTTON, RESTART QUIZ - I COULD MAKE THE NEXT BUTTON GO AWAY ACCORDING TO THE 
+//LENGTH OF THE STATE.QUESTIONS IF IT IS GREATER THAN THE CURRENT QUESTION. HIDE AND SHOW THE BUTTONS. ALSO CHANGE 
+//THE SCORE THEN IT SHOULD SET CURRENT QUESTION TO 0 AGAIN/
+//
 $(function() {
 	startQuiz();
 	handleAnswerSubmit();
-
+	nextQuestion();
+	resetPage();
 });

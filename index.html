@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Beyonc&eacute; Quiz</title>
+	<meta charset="utf-8">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link rel="stylesheet" href= 'main.css'>
 </head>
@@ -17,15 +18,17 @@
 			<h2 class="js-question-text"></h2>
 			<form id="quiz-answers">
 				<ul class="choices">
-					<button class="submitButton" type="submit">Submit</button>
 				</ul>
+				<button class="submitButton" type="submit">Submit</button>
 			</form>
-			<div class="score">Your Score: <span class="js-score"></span> of 5
-			</div>
 		</div>
 
 		<div class="js-response hidden">
+			<div class="confused"></div>
 			<button class="nextButton">Next</button>
+		</div>
+		<div class="reset hidden">
+			<button class="resetButton">Reset</button>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
